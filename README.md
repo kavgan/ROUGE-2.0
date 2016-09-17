@@ -8,13 +8,12 @@ ROUGE 2.0 is a Java Package for Evaluation of Summarization Tasks building on th
 - Synonyms capture for better agreement between system and reference summaries [English only and requires WordNet installation]
 - Evaluation of specific parts of speech (e.g. NN) [Uses Stanford POS Tagger]
 
-This is an open-source project, so if you want to implement other measures, please read the documentation on how to contribute to this project.  
-
+This is an open-source project, so if you want to implement other measures, please read the [documentation](#contributing-to-rouge20) on how to contribute to this project.  
 
 ## Quick Start
 To start evaluating your summaries using ROUGE, just download this [complete ROUGE2.0 distribution](distribute/rouge2.0-0.2-distribute.zip) and read the [usage instructions here](rouge2.0_usage.md).
 
-To build on the source code, read the installation instructions below.
+To build on the source code, please read the installation instructions below.
 
 ## Installation 
 
