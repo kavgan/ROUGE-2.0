@@ -1,0 +1,4 @@
+ROUGE-Type,Task Name,System Name,Avg_Recall,Avg_Precision,Avg_F-Score,Num Reference Summaries
+ROUGE-1+StopWordRemoval+Stemming,TASK1,SYSSUM1.TXT,0.80000,0.66667,0.72727,2
+ROUGE-1+StopWordRemoval+Stemming,TASK1,SYSSUM2.TXT,0.80000,0.17391,0.28571,2
+ROUGE-1+StopWordRemoval+Stemming,TASK2,SYSSUM1.TXT,0.38475,0.97309,0.55146,1
