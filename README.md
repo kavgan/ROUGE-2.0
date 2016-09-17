@@ -25,4 +25,4 @@ When reporting issues please use "Github Issues" and include as much detail as p
 
 ### Contributing code
 
-Thanks for your interest in contributing code to ROUGE2.0! To contribute code to ROUGE2.0, please submit a pull request early on with your ideas and planned changes or enhancement. Once you get the thumbs up, you can use your usual workflow for development. Please use meaningful commit messages that intuitively explain what you are trying to achieve.   
+Thanks for your interest in contributing code to ROUGE2.0! To contribute code to ROUGE2.0, please create a new branch and submit a pull request early on with your ideas and planned changes or enhancement. Once you get the thumbs up, you can use your usual workflow for development. Please use meaningful commit messages that intuitively explain what you are trying to achieve.   
