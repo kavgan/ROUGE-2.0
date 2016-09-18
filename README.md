@@ -21,7 +21,7 @@ To build on the source code of ROUGE 2.0, [clone the repository](https://github.
 
 ## Download / Links
 - [ROUGE 2.0 Downloadable Package](https://github.com/RxNLP/ROUGE-2.0/raw/master/distribute/rouge2.0-0.2-distribute.zip)
-- [ROUGE 2.0 Usage Documentation]()
+- [ROUGE 2.0 Usage Documentation](http://www.rxnlp.com/rouge-2-0-usage-documentation/)
 - [Source Code](https://github.com/RxNLP/ROUGE-2.0)
 
 ## Contributing to ROUGE 2.0
