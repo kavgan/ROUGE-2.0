@@ -11,13 +11,20 @@ ROUGE 2.0 is a Java Package for Evaluation of Summarization Tasks building on th
 This is an open-source project, so if you want to implement other measures, please read the [documentation](#contributing-to-rouge20) on how to contribute to this project.  
 
 ## Quick Start
-To start evaluating your summaries using ROUGE, just download this [complete ROUGE2.0 distribution](distribute/rouge2.0-0.2-distribute.zip) and read the [usage instructions here](rouge2.0_usage.md).
+To start evaluating your summaries using ROUGE, just download this [complete ROUGE 2.0 distribution](distribute/rouge2.0-0.2-distribute.zip) and read the [usage instructions here](rouge2.0_usage.md).
 
 To build on the source code, please read the installation instructions below.
 
-## Installation 
+## Installation
 
-## Contributing to ROUGE2.0
+To build on the source code of ROUGE 2.0, [clone the repository](https://github.com/RxNLP/ROUGE-2.0.git) and import the project as a Maven project by selecting the `pom.xml` file in the root directory from Eclipse, IntelliJ or other IDE's. Next, add the jars under the `lib` directory to your build path for the code to compile. Note that you can also install the jars in the `lib` directory by creating a local maven repository that holds those jar files. All you would need to do after that is to add the local dependencies to your `pom.xml`.
+
+## Download / Links
+- [ROUGE 2.0 Downloadable Package](https://github.com/RxNLP/ROUGE-2.0/blob/master/distribute/rouge2.0-0.2-distribute.zip)
+- [ROUGE 2.0 Usage Documentation]()
+- [Source Code](https://github.com/RxNLP/ROUGE-2.0)
+
+## Contributing to ROUGE 2.0
 
 ### Reporting issues
 
