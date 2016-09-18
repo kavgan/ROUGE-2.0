@@ -11,7 +11,7 @@ ROUGE 2.0 is a Java Package for Evaluation of Summarization Tasks building on th
 This is an open-source project, so if you want to implement other measures, please read the [documentation](#contributing-to-rouge20) on how to contribute to this project.  
 
 ## Quick Start
-To start evaluating your summaries using ROUGE, just download the [complete ROUGE 2.0 distribution](distribute/rouge2.0-0.2-distribute.zip) and follow the [usage instructions](rouge2.0_usage.md).
+To start evaluating your summaries using ROUGE, just download the [complete ROUGE 2.0 distribution](distribute/downloads) and follow the [usage instructions](http://www.rxnlp.com/rouge-2-0-usage-documentation/).
 
 To build on the source code or make contributions, please read the installation instructions below.
 
