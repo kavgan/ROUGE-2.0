@@ -20,7 +20,7 @@ To build on the source code or make contributions, please read the installation 
 To build on the source code of ROUGE 2.0, [clone the repository](https://github.com/RxNLP/ROUGE-2.0.git) and import the project as a Maven project by selecting the `pom.xml` file in the root directory from Eclipse, IntelliJ or other IDE's. Next, add the jars under the `lib` directory to your build path for the code to compile. Note that you can also install the jars in the `lib` directory by creating a local maven repository for those jar files. All you would need to do after that is to add the local dependencies to your `pom.xml`.
 
 ## Download / Links
-- [ROUGE 2.0 Downloadable Package](https://github.com/RxNLP/ROUGE-2.0/raw/master/distribute/rouge2.0-0.2-distribute.zip)
+- [ROUGE 2.0 Downloadable Package](distribute/downloads)
 - [ROUGE 2.0 Usage Documentation](http://www.rxnlp.com/rouge-2-0-usage-documentation/)
 - [Source Code](https://github.com/RxNLP/ROUGE-2.0)
 
