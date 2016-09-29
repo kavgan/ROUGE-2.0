@@ -4,7 +4,7 @@ ROUGE 2.0 is a Java Package for Evaluation of Summarization Tasks building on th
 - Evaluation of ROUGE-N (unigram, bigrams, trigrams, etc)
 - Stemming for different languages
 - Stopword removal with customizable stop words
-- Evalutation of unicode texts (e.g. Persian)
+- Evaluation of unicode texts (e.g. Persian)
 - Synonyms capture for better agreement between system and reference summaries [English only and requires WordNet installation]
 - Evaluation of specific parts of speech (e.g. NN) [Uses Stanford POS Tagger]
 
