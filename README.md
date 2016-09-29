@@ -11,7 +11,7 @@ ROUGE 2.0 is a Java Package for Evaluation of Summarization Tasks building on th
 This is an open-source project, so if you want to implement other measures, please read the [documentation](#contributing-to-rouge20) on how to contribute to this project.  
 
 ## Quick Start
-To start evaluating your summaries using ROUGE, just download the [complete ROUGE 2.0 distribution](distribute/rouge2.0-0.2-distribute.zip) and follow the [usage instructions](rouge2.0_usage.md).
+To start evaluating your summaries using ROUGE, just download the [complete ROUGE 2.0 distribution](distribute/downloads) and follow the [usage instructions](http://www.rxnlp.com/rouge-2-0-usage-documentation/).
 
 To build on the source code or make contributions, please read the installation instructions below.
 
@@ -20,8 +20,8 @@ To build on the source code or make contributions, please read the installation 
 To build on the source code of ROUGE 2.0, [clone the repository](https://github.com/RxNLP/ROUGE-2.0.git) and import the project as a Maven project by selecting the `pom.xml` file in the root directory from Eclipse, IntelliJ or other IDE's. Next, add the jars under the `lib` directory to your build path for the code to compile. Note that you can also install the jars in the `lib` directory by creating a local maven repository for those jar files. All you would need to do after that is to add the local dependencies to your `pom.xml`.
 
 ## Download / Links
-- [ROUGE 2.0 Downloadable Package](https://github.com/RxNLP/ROUGE-2.0/raw/master/distribute/rouge2.0-0.2-distribute.zip)
-- [ROUGE 2.0 Usage Documentation]()
+- [ROUGE 2.0 Downloadable Package](distribute/downloads)
+- [ROUGE 2.0 Usage Documentation](http://www.rxnlp.com/rouge-2-0-usage-documentation/)
 - [Source Code](https://github.com/RxNLP/ROUGE-2.0)
 
 ## Contributing to ROUGE 2.0
@@ -32,4 +32,6 @@ When reporting issues please use "Github Issues" and include as much detail as p
 
 ### Contributing code
 
-Thanks for your interest in contributing code to ROUGE2.0! To contribute code to ROUGE2.0, please create a new branch and submit a pull request early on with your ideas and planned changes or enhancement. Once you get the thumbs up, you can use your usual workflow for development. Please use meaningful commit messages that intuitively explain what you are trying to achieve.   
+Thanks for your interest in contributing code to ROUGE2.0! To contribute code to ROUGE2.0, please create a new branch and submit a pull request early on with your ideas and planned changes or enhancement. Once you get the thumbs up, you can use your usual workflow for development. Your changes will be reviewed and finally accepted for inclusion. Please use meaningful commit messages that intuitively explain what you are trying to achieve.
+
+If you are proposing new evaluation measures, your changes will be included once your paper is accepted at a conference or journal. 
