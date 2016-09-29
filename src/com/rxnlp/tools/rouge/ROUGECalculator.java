@@ -23,8 +23,9 @@ import org.apache.log4j.Logger;
 import org.tartarus.snowball.SnowballStemmer;
 import org.tartarus.snowball.ext.englishStemmer;
 
-import com.rxnlp.lang.utils.WordNetDict;
 import com.rxnlp.tools.rouge.ROUGESettings.RougeType;
+import com.rxnlp.utils.lang.StopWordsHandler;
+import com.rxnlp.utils.lang.WordNetDict;
 
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 

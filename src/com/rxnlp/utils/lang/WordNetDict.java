@@ -1,4 +1,4 @@
-package com.rxnlp.lang.utils;
+package com.rxnlp.utils.lang;
 
 import java.util.ArrayList;
 import java.util.Arrays;

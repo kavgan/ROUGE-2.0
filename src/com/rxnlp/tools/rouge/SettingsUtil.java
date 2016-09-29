@@ -82,7 +82,7 @@ public class SettingsUtil {
 			val=properties.getProperty("pos_tagger_name","english-left3words-distsim.tagger");
 			rs.TAGGER_NAME=val;
 			
-			val=properties.getProperty("stemmer_name","englishStemmer");
+			val=properties.getProperty("stemmer.name","englishStemmer");
 			rs.STEMMER=val;
 			
 			val=properties.getProperty("stemmer.use","false");
