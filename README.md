@@ -1,12 +1,18 @@
-# ROUGE-2.0
-ROUGE 2.0 is a Java Package for Evaluation of Summarization Tasks building on the Perl Implementation of ROUGE. ROUGE 2.0 currently supports the following:
+## ROUGE 2.0
 
-- Evaluation of ROUGE-N (unigram, bigrams, trigrams, etc)
-- Stemming for different languages
-- Stopword removal with customizable stop words
-- Evaluation of unicode texts (e.g. Persian)
-- Synonyms capture for better agreement between system and reference summaries [English only and requires WordNet installation]
-- Evaluation of specific parts of speech (e.g. NN) [Uses Stanford POS Tagger]
+ROUGE 2.0 is a Java Package for Evaluation of Summarization Tasks building on the Perl Implementation of ROUGE. This is a lightweight open-source tool that allows for easy evaluation of summaries or translation by limiting the amount of formatting needed in terms of reference summaries as well as system summaries. In addition, it also allows for evaluation of unicode texts known to be an issue with other implementations of ROUGE. One can also add new evaluation metrics to the existing code base or improve on existing ones.
+
+ROUGE stands for Recall-Oriented Understudy for Gisting Evaluation. It consists of a set of metrics for evaluating automatic summarization of texts as well as machine translation. It works by comparing an automatically produced summary or translation against a set of reference summaries (typically human-produced) or translations. If you want to learn more about how ROUGE works you can [read this article](http://www.rxnlp.com/how-rouge-works-for-evaluation-of-summarization-tasks/).
+
+
+# Features
+
+ROUGE 2.0 currently supports the following:
+
+* Evaluation of ROUGE-N (unigram, bigrams, trigrams, etc)
+* Stemming for different languages
+* Stopword removal with customizable stop words
+* Evaluation of unicode texts (e.g. Persian)
 
 This is an open-source project, so if you want to implement other measures, please read the [documentation](#contributing-to-rouge20) on how to contribute to this project.  
 
