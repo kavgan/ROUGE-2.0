@@ -1,6 +1,7 @@
 package com.rxnlp.tools.rouge;
 
-import org.tartarus.snowball.SnowballStemmer;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ROUGESettings {
 	
@@ -15,7 +16,10 @@ public class ROUGESettings {
 	
 	
 	/** ROUGE-N */
-	public int NGRAM=2;
+	List<String> NGRAM = new ArrayList<String>() {{
+	    add("1");
+	    add("2");
+	}};
 	
 	/**
 	 * Is this ROUGE-N, ROUGE-Topic or ROUGE-TopicUniq
@@ -46,6 +50,10 @@ public class ROUGESettings {
 
 	/**root of the reference and system summaries */
 	public String PROJ_DIR="projects.txt";
+	
+	
+	/**beta for F-score */
+	public double BETA=1.0;
 
 
 	public String STEMMER;

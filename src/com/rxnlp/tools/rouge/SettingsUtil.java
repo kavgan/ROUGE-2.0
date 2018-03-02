@@ -1,19 +1,15 @@
 package com.rxnlp.tools.rouge;
 
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.tartarus.snowball.SnowballStemmer;
-import org.tartarus.snowball.ext.danishStemmer;
-import org.tartarus.snowball.ext.englishStemmer;
-import org.tartarus.snowball.ext.frenchStemmer;
-import org.tartarus.snowball.ext.germanStemmer;
-import org.tartarus.snowball.ext.portugueseStemmer;
-import org.tartarus.snowball.ext.turkishStemmer;
 
 import com.rxnlp.tools.rouge.ROUGESettings.RougeType;
 
@@ -34,7 +30,7 @@ public class SettingsUtil {
 			// Read properties file.
 			String propFile=System.getProperty("rouge.prop", "rouge.properties");
 			
-			log.info("Using rouge.properties file specified as '"+propFile+"'");
+			log.info("Using rouge.properties='"+new File(propFile).getAbsolutePath()+"'");
 			
 			InputStream stream=new FileInputStream(propFile);
 			loadProps(stream,rs);
@@ -43,8 +39,6 @@ public class SettingsUtil {
 			
 			System.err.println("Properties file not found. Please specify -Drouge.prop=<path_to_rouge_prop> in the command line or place 'rouge.properties' file in the root of the project.");
 			System.exit(-1);
-			// TODO Auto-generated catch block
-			//exception.printStackTrace();
 		}
 		
 		
@@ -59,7 +53,7 @@ public class SettingsUtil {
 
 
 			String val=properties.getProperty("ngram","1");
-			rs.NGRAM=Integer.parseInt(val);
+			rs.NGRAM=getNGrams(val);
 			
 			val=properties.getProperty("project.dir","projects");
 			rs.PROJ_DIR=val;
@@ -95,6 +89,9 @@ public class SettingsUtil {
 			val=properties.getProperty("outputFile","results.txt");
 			rs.RESULTS_FILE=val;
 			
+			val=properties.getProperty("beta","1.0");
+			rs.BETA=Double.parseDouble(val);
+			
 			//property=properties.getProperty("type","normal");
 			//ROUGESettings.TYPE= property;
 
@@ -105,6 +102,10 @@ public class SettingsUtil {
 		}
 
 		
+	}
+
+	private static List<String> getNGrams(String val) {
+		return Arrays.asList(val.split("\\s?,\\s?"));
 	}
 	
 	

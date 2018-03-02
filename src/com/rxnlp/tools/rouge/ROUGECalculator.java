@@ -1,6 +1,7 @@
 package com.rxnlp.tools.rouge;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -32,7 +33,7 @@ import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 /**
  * 
  * @author Kavita Ganesan
- * @version ROUGE 2.0
+ * www.rxnlp.com
  *
  */
 public class ROUGECalculator {
@@ -51,7 +52,6 @@ public class ROUGECalculator {
 	private ROUGESettings settings;
 	BufferedWriter resultsWriter;
 
-	
 	public class Result {
 
 		double precision = 0;
@@ -59,6 +59,13 @@ public class ROUGECalculator {
 		double f = 0;
 		int count = 0;
 		String name;
+		
+		public void resetROUGE(){
+			precision=0;
+			recall=0;
+			count=0;
+			f=0;
+		}
 
 	}
 
@@ -80,6 +87,8 @@ public class ROUGECalculator {
 		}
 
 	}
+	
+	
 
 	public static void main(String args[]) {
 
@@ -95,35 +104,30 @@ public class ROUGECalculator {
 		if (settings.REMOVE_STOP_WORDS) {
 			stopHandler = new StopWordsHandler(settings.STOP_WORDS_FILE);
 		}
-		
-		if(settings.USE_STEMMER){
+
+		if (settings.USE_STEMMER) {
 			try {
-				Class stemClass = Class.forName("org.tartarus.snowball.ext." +settings.STEMMER );
+				Class stemClass = Class.forName("org.tartarus.snowball.ext." + settings.STEMMER);
 				stemmer = (SnowballStemmer) stemClass.newInstance();
 			} catch (ClassNotFoundException e) {
-				logger.error("Stemmer not found "+e.getMessage());
+				logger.error("Stemmer not found " + e.getMessage());
 				logger.error("Default englishStemmer will be used");
-				stemmer=new englishStemmer();
+				stemmer = new englishStemmer();
 			} catch (InstantiationException e) {
-				logger.error("Problem instantiating stemmer..."+e.getMessage());
+				logger.error("Problem instantiating stemmer..." + e.getMessage());
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Illegal Access " + e.getMessage());
 			}
 		}
 
 		/** load POS tagger only if ROUGE topic or synonyms are true */
-		if (settings.ROUGE_TYPE.equals(RougeType.topic) || settings.ROUGE_TYPE.equals(RougeType.topicUniq) 	|| settings.USE_SYNONYMS) {
+		if (settings.ROUGE_TYPE.equals(RougeType.topic) || settings.ROUGE_TYPE.equals(RougeType.topicUniq)
+				|| settings.USE_SYNONYMS) {
 			tagger = new MaxentTagger("resources/taggers/" + settings.TAGGER_NAME);
 			logger.info("Loaded...POS tagger.");
 		}
 
-		/*
-		 * if(args.length <1) { System.err.println(
-		 * "Please specify project directory. "); System.exit(-1); }
-		 * 
-		 * if(args.length<2){ printUsage(); }
-		 */
+		
 
 		if (settings.OUTPUT_TYPE.equalsIgnoreCase("file")) {
 			try {
@@ -145,8 +149,9 @@ public class ROUGECalculator {
 				resultsWriter.newLine();
 
 			} catch (IOException e) {
-				logger.warn("There was a problem creating the results file ", e.getCause());
-				e.printStackTrace();
+				logger.error("There was a problem creating or writing to the results file. Make sure the file is not in use");
+				logger.error(e.getMessage());
+				System.exit(-1);
 			}
 		}
 
@@ -179,81 +184,80 @@ public class ROUGECalculator {
 		}
 	}
 
-
-
-		/*List<String> reference=new ArrayList<String>();
-		List<String> candidate=new ArrayList<String>();
-
-
-		reference.add("I really loved the sound quality it was very good.");
-		reference.add("Battery lasted long, but what is bad that is that it is so expensive.");
-
-
-		candidate.add("Battery lasted super long.");
-		candidate.add("Sound quality extremely good.");
-		candidate.add("Battery was expensive.");
-
-		if(ROUGESettings.TYPE.equals(RougeType.topic) || 
-			ROUGESettings.TYPE.equals(RougeType.topicCompressed)){
-
-			getPOSTagged(reference);
-			getPOSTagged(candidate);
-		}
-
-		computeRouge(reference,candidate);*/
-
-	
-
 	private void evaluate(HashMap<String, TaskFile> hmEvalTasks) {
 
 		Set<String> tasks = hmEvalTasks.keySet();
 		StringBuffer b = new StringBuffer();
-		System.out.println("\n========Results=======\n");
-		for (String task : tasks) {
+		List<String> resultList=new ArrayList<String>();
+		
+			for (String task : tasks) {
 
-			TaskFile t = hmEvalTasks.get(task);
-			HashMap<Path, Result> systems = t.systemFiles;
-			Set<Path> sysKeys = systems.keySet();
+				TaskFile t = hmEvalTasks.get(task);
+				HashMap<Path, Result> systems = t.systemFiles;
+				Set<Path> sysKeys = systems.keySet();
+			
+			for (String ngram : settings.NGRAM) {
+				
+				logger.info("Working on "+task+" ngram="+ngram);
+				
 
-			for (Path system : sysKeys) {
+				for (Path system : sysKeys) {
 
-				// get all sentences from the system file
-				List<String> systemSents = getSystemSents(system);
+					// get all sentences from the system file
+					List<String> systemSents = getSystemSents(system);
 
-				// the result object for sys file
-				Result r = systems.get(system);
+					// the result object for sys file
+					Result r = systems.get(system);
+					computeRouge(r, ngram, systemSents, t.referenceFiles);
+					String str = getROUGEName(settings,ngram);
 
-				computeRouge(r, systemSents, t.referenceFiles);
-				String str = getROUGEName(settings);
+					// Print results to console
+					String resultStr=str + "\t" + t.taskName.toUpperCase() + "\t" + r.name.toUpperCase()
+							+ "\tAverage_R:" + df.format(r.recall) + "\tAverage_P:" + df.format(r.precision)
+							+ "\tAverage_F:" + df.format(r.f) + "\tNum Reference Summaries:" + r.count;
+					resultList.add(resultStr);
+					// Write to file if specified by settings
+					if (resultsWriter != null) {
+						try {
+							b.delete(0, b.length());
+							b.append(str).append(",")
+									.append(t.taskName.toUpperCase()).append(",")
+									.append(r.name.toUpperCase()).append(",").append(df.format(r.recall)).append(",")
+									.append(df.format(r.precision)).append(",").append(df.format(r.f)).append(",")
+									.append(r.count);
 
-				// Print results to console
+							resultsWriter.write(b.toString());
+							resultsWriter.newLine();
+							
+						} catch (IOException e) {
+							logger.error(e.getMessage());
+						}
 
-				System.out.println(str + "\t" + t.taskName.toUpperCase() + "\t" + r.name.toUpperCase() + "\tAverage_R:"
-						+ df.format(r.recall) + "\tAverage_P:" + df.format(r.precision) + "\tAverage_F:"
-						+ df.format(r.f) + "\tNum Reference Summaries:" + r.count);
-
-				// Write to file if specified by settings
-				if (resultsWriter != null) {
-					try {
-						b.delete(0, b.length());
-						b.append(str).append(",").append(t.taskName.toUpperCase()).append(",")
-								.append(r.name.toUpperCase()).append(",").append(df.format(r.recall)).append(",")
-								.append(df.format(r.precision)).append(",").append(df.format(r.f)).append(",")
-								.append(r.count);
-
-						resultsWriter.write(b.toString());
-						resultsWriter.newLine();
-
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
 					}
-
 				}
-			}
+				try {
+					resultsWriter.newLine();
+					resultList.add("\n");
+				} catch (IOException e) {
+					logger.error(e.getMessage());
+				}
+			}//end of task
+			
+			
 		}
-		System.out.println("\n======Results End======\n");
+			
+		printResults(resultList);
 		cleanUp();
+	}
+
+	private void printResults(List<String> resultList) {
+		System.out.println("\n========Results Summary=======\n");
+		
+		for (String res:resultList){
+			System.out.println(res);
+		}
+		
+		System.out.println("======Results Summary End======\n");
 	}
 
 	private void cleanUp() {
@@ -261,20 +265,19 @@ public class ROUGECalculator {
 		try {
 			if (resultsWriter != null) {
 				logger.info("Results written to " + settings.RESULTS_FILE);
-				System.out.println("\n\nPlease find results file in: " + settings.RESULTS_FILE);
+				System.out.println("\n\nDone! Find results file in: " + (new File(settings.RESULTS_FILE)).getAbsolutePath());
 				resultsWriter.close();
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 	}
 
-	private String getROUGEName(ROUGESettings settings) {
+	private String getROUGEName(ROUGESettings settings, String ngram) {
 
 		StringBuffer sb = new StringBuffer();
-		sb.append("ROUGE-" + settings.NGRAM);
+		sb.append("ROUGE-" + ngram);
 
 		// TYPE - TOPIC, NORMAL
 		if (!settings.ROUGE_TYPE.equals(RougeType.normal))
@@ -303,7 +306,7 @@ public class ROUGECalculator {
 
 		// read file into stream, try-with-resources
 		List<String> sentList = new ArrayList<>();
-		try (Stream<String> stream = Files.lines(system,StandardCharsets.ISO_8859_1)) {
+		try (Stream<String> stream = Files.lines(system, StandardCharsets.ISO_8859_1)) {
 
 			stream.forEach(line -> {
 				line = cleanSent(line);
@@ -311,7 +314,7 @@ public class ROUGECalculator {
 			});
 
 		} catch (IOException e) {
-			logger.error("Problem reading system sentences" );
+			logger.error("Problem reading system sentences");
 		}
 
 		return sentList;
@@ -457,9 +460,10 @@ public class ROUGECalculator {
 		}
 	}
 
-	public void computeRouge(Result r, List<String> candSents, List<Path> refSentFileNames) {
+	public void computeRouge(Result r, String ngram, List<String> sysSents, List<Path> refSentFileNames) {
 
 		List<String> refSents = null;
+		r.resetROUGE();
 
 		// For each reference summary
 		for (Path refSentFile : refSentFileNames) {
@@ -474,35 +478,35 @@ public class ROUGECalculator {
 
 				/** ROUGE topic , POS TAG and set n-gram to 1 */
 				if (settings.ROUGE_TYPE.equals(RougeType.topic) || settings.ROUGE_TYPE.equals(RougeType.topicUniq)) {
-					settings.NGRAM = 1;
+					ngram="1";
 					getPOSTagged(refSents, true);
-					getPOSTagged(candSents, true);
+					getPOSTagged(sysSents, true);
 				}
 
 				/** ROUGE+Synonyms, POS TAG */
 				else if (settings.USE_SYNONYMS) {
 					getPOSTagged(refSents, false);
-					getPOSTagged(candSents, false);
+					getPOSTagged(sysSents, false);
 				}
 
 				/** Remove Stop Words */
 				if (settings.REMOVE_STOP_WORDS) {
 					removeStopWords(refSents);
-					removeStopWords(candSents);
+					removeStopWords(sysSents);
 				}
-				
+
 				/** Stem Words */
 				if (settings.USE_STEMMER) {
 					applyStemming(refSents);
-					applyStemming(candSents);
+					applyStemming(sysSents);
 				}
 
 				double overlap = 0;
 				double ROUGE = 0;
 
-				Collection<String> hsrefOriginal = getNGramTokens(refSents);
-				Collection<String> referenceSummaryTokens = getNGramTokens(refSents);
-				Collection<String> systemSummaryTokens = getNGramTokens(candSents);
+				Collection<String> hsrefOriginal = getNGramTokens(ngram,refSents);
+				Collection<String> refSummaryTokens = getNGramTokens(ngram,refSents);
+				Collection<String> sysSummaryTokens = getNGramTokens(ngram,sysSents);
 
 				HashSet<String> theSynonyms = new HashSet<>();
 
@@ -512,11 +516,11 @@ public class ROUGECalculator {
 				 */
 
 				if (settings.USE_SYNONYMS) {
-					removePos(referenceSummaryTokens);
+					removePos(refSummaryTokens);
 
 					// PERFORM COMPARISONS
-					if (systemSummaryTokens.size() > 0 && referenceSummaryTokens.size() > 0) {
-						for (String sysTok : systemSummaryTokens) {
+					if (sysSummaryTokens.size() > 0 && refSummaryTokens.size() > 0) {
+						for (String sysTok : sysSummaryTokens) {
 
 							String[] unigramList = sysTok.split(SEP);
 
@@ -541,8 +545,8 @@ public class ROUGECalculator {
 							// synonyms
 							for (String syntok : synTokens) {
 
-								if (referenceSummaryTokens.contains(syntok)) {
-									referenceSummaryTokens.remove(syntok);
+								if (refSummaryTokens.contains(syntok)) {
+									refSummaryTokens.remove(syntok);
 									overlap++;
 								}
 							}
@@ -551,39 +555,89 @@ public class ROUGECalculator {
 				} else {
 					// WE DONT CARE ABOUT SYNONYMS
 
-					for (String sysTok : systemSummaryTokens) {
+					for (String sysTok : sysSummaryTokens) {
 
-						if (referenceSummaryTokens.contains(sysTok)) {
-							referenceSummaryTokens.remove(sysTok);
+						if (refSummaryTokens.contains(sysTok)) {
+							refSummaryTokens.remove(sysTok);
 							overlap++;
 						}
 					}
 				}
+				r.count=r.count+1;
+				computePrecisionRecall(r,ngram, overlap, hsrefOriginal, sysSummaryTokens, refSents, sysSents);
+				
+				
 
-				if (overlap > 0) {
-					double rougeRecall = overlap / (hsrefOriginal.size());
-					double rougePrecision = (overlap) / (systemSummaryTokens.size());
-					r.recall = r.recall + rougeRecall;
-					r.precision = r.precision + rougePrecision;
-
-				}
-
-				r.count = r.count + 1;
-
-				/*
-				 * System.out.println("ROUGE SCORE IS:"); System.out.println(
-				 * "ROUGE Recall:"+rougeRecall); System.out.println(
-				 * "ROUGE Precision:"+rougePrecision);
-				 */
 			} // SENTS FOUND
 		}
+		
+		finalizePrecisionRecall(r);
+	}
 
-		// AVERAGE THE P/R (MACRO AVERAGE)
+	/**
+	 * Average the precision and recall and compute f-score
+	 * 
+	 * @param r
+	 */
+	private void finalizePrecisionRecall(Result r) {
+		// AVERAGE THE P/R
 		r.precision = r.precision / r.count;
 		r.recall = r.recall / r.count;
 
 		if (r.precision > 0 || r.recall > 0)
-			r.f = 2 * r.precision * r.recall / (r.precision + r.recall);
+			r.f = ((1 + Math.pow(settings.BETA, 2)) * r.recall * r.precision)
+					/ ((Math.pow(settings.BETA, 2) * r.precision) + r.recall);
+
+	}
+
+	private void computePrecisionRecall(Result r, String ngram, double overlap, Collection<String> hsrefOriginal,
+			Collection<String> sysSummaryTokens, List<String> refSents, List<String> sysSents) {
+
+		// ROUGE-L
+		// special case, rouge L, we need to get lcs
+		if (ngram.toLowerCase().equals("l")) {
+
+			computeROUGEL(r, refSents, sysSents);
+		}
+
+		else
+		// EVERYTHING ELSE
+		if (overlap > 0) {
+			double rougeRecall = overlap / (hsrefOriginal.size());
+			double rougePrecision = (overlap) / (sysSummaryTokens.size());
+			r.recall = r.recall + rougeRecall;
+			r.precision = r.precision + rougePrecision;
+		}
+	}
+
+	private void computeROUGEL(Result r, List<String> refSents, List<String> sysSents) {
+		double total_lcs = 0;
+		Set<String> unionLCSWords = new HashSet<>();
+		Set<String> allRefWords = new HashSet<>();
+		Set<String> allSysWords = new HashSet<>();
+
+		// Get unique sys summary words
+		for (String sys : sysSents) {
+			allSysWords.addAll(Arrays.asList(sys.split("\\s+")));
+		}
+
+		// Get unique reference summary words
+		for (String ref : refSents) {
+			allRefWords.addAll(Arrays.asList(ref.split("\\s+")));
+		}
+
+		// Get the union LCS
+		for (String ref : refSents) {
+			// get union of words from reference into a hashset
+			for (String sys : sysSents) {
+				// get union of all LCS words into hashset
+				unionLCSWords.addAll(getLCSSequence(ref, sys));
+			}
+		}
+		double rougeRecall = unionLCSWords.size() / (double) allRefWords.size();
+		double rougePrecision = unionLCSWords.size() / (double) allSysWords.size();
+		r.recall = r.recall + rougeRecall;
+		r.precision = r.precision + rougePrecision;
 
 	}
 
@@ -605,133 +659,6 @@ public class ROUGECalculator {
 
 		originalTokens.clear();
 		originalTokens.addAll(newStr);
-
-	}
-
-	public void computeRouge2(Result r, List<String> candSents, List<Path> refSentFileNames) {
-
-		List<String> refSents = null;
-
-		for (Path refSentFile : refSentFileNames) {
-
-			refSents = getSystemSents(refSentFile);
-
-			if (refSents == null) {
-
-				logger.warn("No reference sentences in " + refSentFile);
-
-			} else {
-
-				if (settings.ROUGE_TYPE.equals(RougeType.topic) || settings.ROUGE_TYPE.equals(RougeType.topicUniq)) {
-					getPOSTagged(refSents, true);
-					getPOSTagged(candSents, true);
-				} else if (settings.USE_SYNONYMS) {
-					getPOSTagged(refSents, false);
-					getPOSTagged(candSents, false);
-				}
-
-				if (settings.REMOVE_STOP_WORDS) {
-					removeStopWords(refSents);
-					removeStopWords(candSents);
-				}
-
-				/*
-				 * Collection<String> hsref=getNgramList(refSents,true);
-				 * Collection<String> hsSystem=getNgramList(candSents,true);
-				 */
-				double overlap = 0;
-				double ROUGE = 0;
-
-				Collection<String> hsrefOriginal = getNGramTokens(refSents);
-				Collection<String> referenceSummaryTokens = getNGramTokens(refSents);
-				Collection<String> systemSummaryTokens = getNGramTokens(candSents);
-
-				HashSet<String> theSynonyms = new HashSet<>();
-				if (settings.USE_SYNONYMS) {
-					removePos(referenceSummaryTokens);
-
-					// PERFORM COMPARISONS
-					if (systemSummaryTokens.size() > 0 && referenceSummaryTokens.size() > 0) {
-						for (String sysTok : systemSummaryTokens) {
-
-							String[] unigramList = sysTok.split(SEP);
-
-							for (String unigram : unigramList) {
-								theSynonyms.addAll(getSynonymList(unigram));
-							}
-
-							// for each synonym, check if the reference summary
-							// contains it. if at least one matches, then this
-							// is a hit
-							boolean isMatch = false;
-
-							// For each reference summary
-							for (String refTok : referenceSummaryTokens) {
-
-								String refUniToks[] = refTok.split(SEP);
-
-								int refTokMatch = 0;
-
-								// get individual reference summary tokens
-								for (String t : refUniToks) {
-									for (String s : theSynonyms) {
-										if (t.contains(s)) {
-											refTokMatch++;
-											break;
-										}
-									}
-								}
-
-								if (refTokMatch == refUniToks.length)
-									overlap++;
-							}
-
-							/*
-							 * if(referenceSummaryTokens.contains(s)){
-							 * referenceSummaryTokens.remove(s); overlap++;
-							 * 
-							 * //AT LEAST ONE SYNONYM MATCHED. NO NEED TO DOUBLE
-							 * COUNT break; }
-							 */
-							// }
-						}
-
-					}
-				} else {
-					// WE DONT CARE ABOUT SYNONYMS
-
-					for (String sysTok : systemSummaryTokens) {
-
-						if (referenceSummaryTokens.contains(sysTok)) {
-							referenceSummaryTokens.remove(sysTok);
-							overlap++;
-						}
-					}
-				}
-
-				if (overlap > 0) {
-					double rougeRecall = overlap / (hsrefOriginal.size() + 1);
-					double rougePrecision = overlap / (systemSummaryTokens.size() + 1);
-					r.recall = r.recall + rougeRecall;
-					r.precision = r.precision + rougePrecision;
-				}
-
-				r.count = r.count + 1;
-
-				/*
-				 * System.out.println("ROUGE SCORE IS:"); System.out.println(
-				 * "ROUGE Recall:"+rougeRecall); System.out.println(
-				 * "ROUGE Precision:"+rougePrecision);
-				 */
-			} // SENTS FOUND
-		}
-
-		// AVERAGE THE P/R (MACRO AVERAGE)
-		r.precision = r.precision / r.count;
-		r.recall = r.recall / r.count;
-
-		if (r.precision > 0 || r.recall > 0)
-			r.f = 2 * r.precision * r.recall / (r.precision + r.recall);
 
 	}
 
@@ -789,31 +716,6 @@ public class ROUGECalculator {
 		return synonymList;
 	}
 
-	/*
-	 * private double getOverlap(Collection<String> main, Collection<String>
-	 * sub) {
-	 * 
-	 * double overlap=0;
-	 * 
-	 * for(String aa:main){ Collection<String> toksList=getNgramList(aa);
-	 * 
-	 * if(sub.contains(aa)){ overlap++; } }
-	 * 
-	 * overlap=overlap/main.size();
-	 * 
-	 * 
-	 * return overlap; }
-	 */
-
-	/*
-	 * private double getOverlap(List<String> sents) { for(String s:sents){
-	 * Collection<String> hsss= getNgramList(s,true);
-	 * 
-	 * for(String s:hsss){ if(hsref.contains(s)){ overlap++; } } }
-	 * 
-	 * overlap=overlap/refSents.size(); return 0; }
-	 */
-
 	private void applyStemming(List<String> sents) {
 
 		List<String> updatedSents = new ArrayList<String>();
@@ -829,11 +731,11 @@ public class ROUGECalculator {
 
 				// IF NOT STOP WORD KEEP
 				stemmer.setCurrent(daToks[0]);
-				
-				if(stemmer.stem()){
+
+				if (stemmer.stem()) {
 					b.append(stemmer.getCurrent());
-					
-					if(daToks.length==2){
+
+					if (daToks.length == 2) {
 						b.append(daToks[1]);
 					}
 					b.append(" ");
@@ -860,13 +762,9 @@ public class ROUGECalculator {
 
 				String[] daToks = t.split("_");
 
-				/*
-				 * //IF IT HAS POS TAGS, then get just the words
-				 * if(t.contains("_")){ da }
-				 */
 
 				// IF NOT STOP WORD KEEP
-				if (!stopHandler.isStop(daToks[0].trim())) {
+				if (!StopWordsHandler.isStop(daToks[0].trim())) {
 					b.append(t).append(" ");
 				}
 			}
@@ -878,6 +776,14 @@ public class ROUGECalculator {
 		sents.addAll(updatedSents);
 	}
 
+	private void printSupportedNgrams() {
+		System.out.println("The following n-gram settings are supported:");
+		System.out.println("ROUGE-N  (e.g. 1,2,3,..)");
+		System.out.println("ROUGE-S  (e.g. S1,S2,S3,..)");
+		System.out.println("ROUGE-SU (e.g. SU1,SU2,SU3,..);");
+		System.out.println("ROUGE-L  (only option: LCS)");
+	}
+
 	/**
 	 * Get list of n-grams
 	 * 
@@ -885,7 +791,7 @@ public class ROUGECalculator {
 	 * @param traditional
 	 * @return
 	 */
-	private Collection<String> getNGramTokens(List<String> sents) {
+	private Collection<String> getNGramTokens(String ngram, List<String> sents) {
 
 		Collection<String> ngramList = null;
 
@@ -897,35 +803,70 @@ public class ROUGECalculator {
 		for (String sent : sents) {
 
 			// ROUGE-1
-			if (settings.NGRAM == 1) {
+			if (ngram.equals("1")) {
 				String[] tokens = sent.split("\\s+");
 				ngramList.addAll(Arrays.asList(tokens));
 			}
 
-			// ROUGE-N
-			if (settings.NGRAM > 1) {
-				generateNgrams(settings.NGRAM, sent, ngramList);
+			else if (ngram.matches("[0-9]+")) {
+				int ngramVal = Integer.parseInt(ngram);
+				generateNgrams(ngramVal, sent, ngramList);
+			}
+
+			else// ROUGE-N
+			if (ngram.matches("SU?[0-9]+")) {
+				generateSkipGrams(ngram, sent, ngramList);
+			}
+
+			else // ROUGE-L
+			if (ngram.toLowerCase().equals("l")) {
+				// just generate unigrams for now
+				generateNgrams(1, sent, ngramList);
+			}
+
+			else {
+				logger.error("Please check your N-GRAM settings. NGRAM=" + settings.NGRAM
+						+ " doesn't seem to be supported.");
+				printSupportedNgrams();
+				System.exit(-1);
 			}
 		}
 
 		return ngramList;
 	}
 
-	/*
-	 * private static Collection<String> getNgramList(String sent,boolean
-	 * traditional) {
-	 * 
-	 * Collection<String> ngramList=null;
-	 * 
-	 * if(ROUGESettings.TYPE.equals(RougeType.topicCompressed) ||
-	 * ROUGESettings.TYPE.equals(RougeType.normalCompressed) ) ngramList=new
-	 * HashSet<String>(); else ngramList=new ArrayList<String>();
-	 * 
-	 * 
-	 * extractNgrams(sent,ngramList);
-	 * 
-	 * return ngramList; }
-	 */
+	private static void generateSkipGrams(String gram, String summary, Collection<String> ngramList) {
+		String[] tokens = summary.split("\\s+");
+
+		// split to get the skip-gram size
+		String[] gramTokens = gram.split("SU?");
+
+		// is the last part does not contain a number, there is some error
+		if (gramTokens.length < 2 && !gramTokens[1].matches("[0-9]+")) {
+			logger.error("There is an error in your ROUGE-S setting. Please check documentation.");
+			System.exit(-1);
+		}
+
+		int skip = Integer.parseInt(gramTokens[1]);
+
+		// GENERATE THE SKIP-N-GRAMS
+		for (int k = 0; k < tokens.length; k++) {
+			String s = tokens[k] + "__";
+			int start = k + 1;
+			int end = Math.min(k + skip + 1, tokens.length);
+			for (int j = start; j < end; j++) {
+				String theSkipGram = s + tokens[j] + "__";
+				ngramList.add(theSkipGram);
+			}
+
+		}
+
+		// if SU specified then also include unigrams
+		if (gram.toLowerCase().contains("su")) {
+			generateNgrams(1, summary, ngramList);
+		}
+
+	}
 
 	private static void generateNgrams(int gram, String summary, Collection<String> ngramList) {
 		String[] tokens = summary.split("\\s+");
@@ -942,6 +883,48 @@ public class ROUGECalculator {
 			ngramList.add(s);
 		}
 
+	}
+
+	/**
+	 * Ensures symmetric LCS results
+	 * 
+	 * @param s1
+	 * @param s2
+	 * @return
+	 */
+	public static List<String> getLCSSequence(String s1, String s2) {
+		List<String> l1 = getLCSInternal(s1, s2);
+		List<String> l2 = getLCSInternal(s2, s1);
+
+		if (l1.size() > l2.size())
+			return l1;
+		else
+			return l2;
+
+	}
+
+	private static List<String> getLCSInternal(String s1, String s2) {
+		List<String> lcsWords = new ArrayList<String>();
+		int internal_start = 0;
+
+		String[] s1Toks = s1.split("\\s+");
+		String[] s2Toks = s2.split("\\s+");
+
+		for (int k = 0; k < s1Toks.length; k++) {
+
+			String s1_word = s1Toks[k];
+
+			// find the longest subsequence
+			for (int j = internal_start; j < s2Toks.length; j++) {
+				String s2_word = s2Toks[j];
+				if (s1_word.equals(s2_word)) {
+					lcsWords.add(s1_word);
+					internal_start = j + 1; // force starting position
+				}
+			}
+		}
+
+		return lcsWords;
 	}
 
 }
