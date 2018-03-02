@@ -1,6 +1,6 @@
 # ROUGE 2.0
 
-ROUGE 2.0 is an easy to use Automatic Summarization Evaluation toolkit. It uses [ROUGE](http://www.aclweb.org/anthology/W04-1013) metrics which works by comparing an automatically produced summary or translation against a set of reference summaries (typically human-produced). ROUGE is one of the standard ways to compute effectiveness of auto generated summaries. To understand how ROUGE works you can [read this article](http://www.rxnlp.com/how-rouge-works-for-evaluation-of-summarization-tasks/).
+ROUGE 2.0 is an easy to use evaluation toolkit for Automatic Summarization tasks. It uses the [ROUGE](http://www.aclweb.org/anthology/W04-1013) system of metrics which works by comparing an automatically produced summary or translation against a set of reference summaries (typically human-produced). ROUGE is one of the standard ways to compute effectiveness of auto generated summaries. To understand how ROUGE works you can [read this article](http://www.rxnlp.com/how-rouge-works-for-evaluation-of-summarization-tasks/).
 
 
 ## Features
