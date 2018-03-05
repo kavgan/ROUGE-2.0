@@ -29,7 +29,7 @@ This is an open-source project, so if you want to implement other measures, plea
 * The above step uses the sample summarization tasks under `rouge2-1.x-runnable/projects/test-summarization` and the default settings in `rouge2-1.x-runnable/rouge.properties` file.
 
 ## Full Documentation
-* [Usage instructions](http://www.rxnlp.com/rouge-2-0-usage-documentation/). 
+* [Usage instructions](https://github.com/RxNLP/ROUGE-2.0/blob/master/docs/usage-documentation.md). 
 * Please use Java 1.8 and above to run the ROUGE 2.0 package. 
 * To build on the source code or make contributions, please read the installation instructions below.
 
