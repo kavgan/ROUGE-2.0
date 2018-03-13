@@ -39,7 +39,7 @@ To build on the source code of ROUGE 2.0, [clone the repository](https://github.
 
 ## Citation
 
-The ROUGE 2.0 report can be found on [arXiv](https://arxiv.org/abs/1803.01937).
+The ROUGE 2.0 report can be found on [arXiv](https://arxiv.org/abs/1803.01937). You can use the following BibTex if you need to cite the ROUGE 2.0 package:
 
 ```
 @article{ganesan2015rouge,
