@@ -37,6 +37,18 @@ This is an open-source project, so if you want to implement other measures, plea
 
 To build on the source code of ROUGE 2.0, [clone the repository](https://github.com/RxNLP/ROUGE-2.0.git) and import the project as a Maven project by selecting the `pom.xml` file in the root directory from Eclipse, IntelliJ or other IDE's. Next, add the jars under the `lib` directory to your build path for the code to compile. Note that you can also install the jars in the `lib` directory by creating a local maven repository for those jar files. All you would need to do after that is to add the local dependencies to your `pom.xml`.
 
+## Citation
+
+The ROUGE 2.0 report can be found on [arXiv](https://arxiv.org/abs/1803.01937).
+
+```
+@article{ganesan2015rouge,
+  title={ROUGE 2.0: Updated and Improved Measures for Evaluation of Summarization Tasks},
+  author={Ganesan, Kavita},
+  year={2015}
+}
+```
+
 
 ## Reporting Issues & Feature Requests
 
