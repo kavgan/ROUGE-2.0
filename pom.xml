@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.rxnlp.tools</groupId>
 	<artifactId>rouge-calculator</artifactId>
-	<version>1.2</version>
+	<version>1.2.1</version>
 	<name>ROUGE-2.0</name>
 	<packaging>jar</packaging>
 	<description>Evaluate text summarization systems</description>
