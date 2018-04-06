@@ -180,6 +180,8 @@ public class ROUGECalculator {
 			logger.error(e.getMessage());
 			logger.error("\nYou need to have a valid 'references' and 'system' folder under " + projectDir
 					+ ". Please check your rouge.properties file");
+			logger.error(e.getMessage());
+			e.printStackTrace();
 			System.exit(-1);
 		}
 	}
@@ -763,12 +765,11 @@ public class ROUGECalculator {
 				String[] daToks = t.split("_");
 
 
-				// IF NOT STOP WORD KEEP
-				if (!StopWordsHandler.isStop(daToks[0].trim())) {
+				// IF NOT STOP WORD, KEEP
+				if (daToks.length<1 || !StopWordsHandler.isStop(daToks[0].trim())) {
 					b.append(t).append(" ");
 				}
 			}
-
 			updatedSents.add(b.toString().trim());
 		}
 
