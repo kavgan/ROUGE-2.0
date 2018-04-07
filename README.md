@@ -16,9 +16,9 @@ The latest version of ROUGE 2.0 supports the following:
 * Evaluation of unicode texts (e.g. Persian)
 * Minimal formatting requirements for system and reference summaries
 * Output in CSV – this makes it super easy for score analysis
-* Full documentation and support via [GitHub Issues](https://github.com/RxNLP/ROUGE-2.0/issues) and [RxNLP Q&A](http://www.rxnlp.com/ask-question/#.WpnDHpPwZTY)
+* [Full documentation](https://github.com/RxNLP/ROUGE-2.0/blob/master/docs/usage-documentation.md) and support via [GitHub Issues](https://github.com/RxNLP/ROUGE-2.0/issues) and [RxNLP Q&A](http://www.rxnlp.com/ask-question/#.WpnDHpPwZTY)
 
-This is an open-source project, so if you want to implement other measures, please read the [documentation](#contributing-to-rouge20) on how to contribute to this project.  
+This is an open-source project, so if you want to implement other measures, please read the [documentation](https://github.com/RxNLP/ROUGE-2.0#contributing-to-rouge-20) on how to contribute to this project.  
 
 ## Quick Start
 * Ensure you have [Java 1.8](https://java.com/en/download/) and above installed. You only need the JRE.
@@ -30,13 +30,10 @@ This is an open-source project, so if you want to implement other measures, plea
 * Use the [full documentation](https://github.com/RxNLP/ROUGE-2.0/blob/master/docs/usage-documentation.md) for summary formatting guidelines and making changes to the settings, etc.
 * To make changes to the ROUGE 2.0 code base, follow the installation steps below.
 
-## Installation
-
-To build on the source code of ROUGE 2.0, [clone the repository](https://github.com/RxNLP/ROUGE-2.0.git) and import the project as a Maven project by selecting the `pom.xml` file in the root directory from Eclipse, IntelliJ or other IDE's. Next, add the jars under the `lib` directory to your build path for the code to compile. Note that you can also install the jars in the `lib` directory by creating a local maven repository for those jar files. All you would need to do after that is to add the local dependencies to your `pom.xml`.
 
 ## Citation
 
-The ROUGE 2.0 report can be found on [arXiv](https://arxiv.org/abs/1803.01937). You can use the following BibTex if you need to cite the ROUGE 2.0 package:
+To cite the ROUGE 2.0 package, please use the following:
 
 ```
 @article{ganesan2015rouge,
@@ -45,6 +42,14 @@ The ROUGE 2.0 report can be found on [arXiv](https://arxiv.org/abs/1803.01937). 
   year={2015}
 }
 ```
+
+You can download the ROUGE 2.0 report from [arXiv](https://arxiv.org/abs/1803.01937). 
+
+## Installation
+
+To build on the source code of ROUGE 2.0, [clone the repository](https://github.com/RxNLP/ROUGE-2.0.git) and import the project as a Maven project by selecting the `pom.xml` file in the root directory from Eclipse, IntelliJ or other IDE's. Next, add the jars under the `lib` directory to your build path for the code to compile. Note that you can also install the jars in the `lib` directory by creating a local maven repository for those jar files. All you would need to do after that is to add the local dependencies to your `pom.xml`.
+
+
 
 
 ## Reporting Issues & Feature Requests
