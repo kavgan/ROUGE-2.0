@@ -27,11 +27,8 @@ This is an open-source project, so if you want to implement other measures, plea
 * Move into the ROUGE 2.0 directory `cd <rouge2-1.x-runnable>`
 * Do a test run: `java -jar rouge2-1.x.jar`. You should see results in the console and in `rouge2-1.x-runnable/results.csv`
 * The above step uses the sample summarization tasks under `rouge2-1.x-runnable/projects/test-summarization` and the default settings in `rouge2-1.x-runnable/rouge.properties` file.
-
-## Full Documentation
-* [Usage instructions](docs/usage-documentation.md). 
-* Please use Java 1.8 and above to run the ROUGE 2.0 package. 
-* To build on the source code or make contributions, please read the installation instructions below.
+* Use the [full documentation](https://github.com/RxNLP/ROUGE-2.0/blob/master/docs/usage-documentation.md) for summary formatting guidelines and making changes to the settings, etc.
+* To make changes to the ROUGE 2.0 code base, follow the installation steps below.
 
 ## Installation
 
