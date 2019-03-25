@@ -22,7 +22,7 @@ This is an open-source project, so if you want to implement other measures, plea
 
 ## Quick Start
 * Ensure you have [Java 1.8](https://java.com/en/download/) and above installed. You only need the JRE.
-* Download latest version of [ROUGE 2.0 distribution zip file](https://github.com/kavgan/ROUGE-2.0/tree/master/versions)
+* Download latest version of [ROUGE 2.0 distribution zip file](https://github.com/kavgan/ROUGE-2.0/tree/master/versions/v1.2.1)
 * Unpack the zip file
 * Move into the ROUGE 2.0 directory `cd <rouge2-1.x-runnable>`
 * Do a test run: `java -jar rouge2-1.x.jar`. You should see results in the console and in `rouge2-1.x-runnable/results.csv`
