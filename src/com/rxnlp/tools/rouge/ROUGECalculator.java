@@ -613,7 +613,7 @@ public class ROUGECalculator {
 	}
 
 	private void computeROUGEL(Result r, List<String> refSents, List<String> sysSents) {
-		double comparisons = 0;
+		
 		Set<String> unionLCSWords = new HashSet<>();
 		Set<String> allRefWords = new HashSet<>();
 		Set<String> allSysWords = new HashSet<>();
