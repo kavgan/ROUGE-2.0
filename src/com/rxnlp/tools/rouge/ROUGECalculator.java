@@ -613,10 +613,11 @@ public class ROUGECalculator {
 	}
 
 	private void computeROUGEL(Result r, List<String> refSents, List<String> sysSents) {
-		double total_lcs = 0;
+		double comparisons = 0;
 		Set<String> unionLCSWords = new HashSet<>();
 		Set<String> allRefWords = new HashSet<>();
 		Set<String> allSysWords = new HashSet<>();
+		
 
 		// Get unique sys summary words
 		for (String sys : sysSents) {
@@ -632,10 +633,12 @@ public class ROUGECalculator {
 		for (String ref : refSents) {
 			// get union of words from reference into a hashset
 			for (String sys : sysSents) {
-				// get union of all LCS words into hashset
-				unionLCSWords.addAll(getLCSSequence(ref, sys));
+				
+				unionLCSWords.addAll(getLCSInternal(ref,sys));
+				 
 			}
 		}
+		
 		double rougeRecall = unionLCSWords.size() / (double) allRefWords.size();
 		double rougePrecision = unionLCSWords.size() / (double) allSysWords.size();
 		r.recall = r.recall + rougeRecall;
@@ -887,22 +890,82 @@ public class ROUGECalculator {
 	}
 
 	/**
-	 * Ensures symmetric LCS results
-	 * 
-	 * @param s1
-	 * @param s2
+	 * LCS implementation repurposed from: https://www.geeksforgeeks.org/printing-longest-common-subsequence/
+	 * @param X - Word array 1
+	 * @param Y - Word array 2
+	 * @param m - Length of word array 1
+	 * @param n - Length of word array 2
 	 * @return
 	 */
-	public static List<String> getLCSSequence(String s1, String s2) {
-		List<String> l1 = getLCSInternal(s1, s2);
-		List<String> l2 = getLCSInternal(s2, s1);
+	static List<String> lcs(String [] X, String [] Y, int m, int n) 
+	 { 
+	     int[][] L = new int[m+1][n+1]; 
 
-		if (l1.size() > l2.size())
-			return l1;
-		else
-			return l2;
+	     // Following steps build L[m+1][n+1] in bottom up fashion. Note 
+	     // that L[i][j] contains length of LCS of X[0..i-1] and Y[0..j-1]  
+	     for (int i=0; i<=m; i++) 
+	     { 
+	         for (int j=0; j<=n; j++) 
+	         { 
+	             if (i == 0 || j == 0) 
+	                 L[i][j] = 0; 
+	             else if (X[i-1].equalsIgnoreCase(Y[j-1])) 
+	                 L[i][j] = L[i-1][j-1] + 1; 
+	             else
+	                 L[i][j] = Math.max(L[i-1][j], L[i][j-1]); 
+	         } 
+	     } 
 
-	}
+	     // Following code is used to print LCS 
+	     int index = L[m][n]; 
+	     int temp = index; 
+
+	     // Create a character array to store the lcs string 
+	     String[] lcs = new String[index+1]; 
+	     lcs[index] = ""; // Set the terminating character 
+
+	     // Start from the right-most-bottom-most corner and 
+	     // one by one store characters in lcs[] 
+	     int i = m, j = n; 
+	     while (i > 0 && j > 0) 
+	     { 
+	         // If current character in X[] and Y are same, then 
+	         // current character is part of LCS 
+	         if (X[i-1].equalsIgnoreCase(Y[j-1])) 
+	         { 
+	             // Put current character in result 
+	             lcs[index-1] = X[i-1];  
+	               
+	             // reduce values of i, j and index 
+	             i--;  
+	             j--;  
+	             index--;      
+	         } 
+
+	         // If not same, then find the larger of two and 
+	         // go in the direction of larger value 
+	         else if (L[i-1][j] > L[i][j-1]) 
+	             i--; 
+	         else
+	             j--; 
+	     } 
+
+	     ArrayList<String> al=new ArrayList<String>();
+	     // Print the lcs 
+	     
+	     for(int k=0;k<=temp;k++) 
+	    	if (!lcs[k].isEmpty()){
+	        	al.add(lcs[k]);
+	    	}
+	     
+	     return al;
+	 }
+  
+    /* Utility function to get max of 2 integers */
+	public static int max(int a, int b) 
+    { 
+        return (a > b) ? a : b; 
+    } 
 
 	private static List<String> getLCSInternal(String s1, String s2) {
 		List<String> lcsWords = new ArrayList<String>();
@@ -911,21 +974,8 @@ public class ROUGECalculator {
 		String[] s1Toks = s1.split("\\s+");
 		String[] s2Toks = s2.split("\\s+");
 
-		for (int k = 0; k < s1Toks.length; k++) {
-
-			String s1_word = s1Toks[k];
-
-			// find the longest subsequence
-			for (int j = internal_start; j < s2Toks.length; j++) {
-				String s2_word = s2Toks[j];
-				if (s1_word.equals(s2_word)) {
-					lcsWords.add(s1_word);
-					internal_start = j + 1; // force starting position
-				}
-			}
-		}
-
-		return lcsWords;
+		
+		return lcs(s1Toks,s2Toks,s1Toks.length,s2Toks.length);
 	}
 
 }
