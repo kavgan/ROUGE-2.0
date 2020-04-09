@@ -16,7 +16,7 @@ The latest version of ROUGE 2.0 supports the following:
 * Evaluation of unicode texts (e.g. Persian)
 * Minimal formatting requirements for system and reference summaries
 * Output in CSV – this makes it super easy for score analysis
-* [Full documentation](https://github.com/kavgan/ROUGE-2.0/blob/master/docs/usage-documentation.md) and support via [GitHub Issues](https://github.com/kavgan/ROUGE-2.0/issues) 
+* [Full documentation](https://kavita-ganesan.com/rouge2-usage-documentation/#.Xo-031NKhhE) and support via [GitHub Issues](https://github.com/kavgan/ROUGE-2.0/issues) 
 
 This is an open-source project, so if you want to implement other measures, please read the [documentation](https://github.com/kavgan/ROUGE-2.0#contributing-to-rouge-20) on how to contribute to this project.  
 
